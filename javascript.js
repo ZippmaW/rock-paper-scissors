@@ -14,74 +14,148 @@ function getComputerChoice() {
       break;
   }
 }
-
+function scoreEdit() {
+  if (playerWin && !computerWin) {
+    playerScore += 1;
+  }
+  if (!playerWin && computerWin) {
+    computerScore += 1;
+  }
+  if (playerWin && computerWin) {
+    playerScore += 1;
+    computerScore += 1;
+  }
+}
 let playerWin = false;
 let computerWin = false;
+let playerScore = 0;
+let computerScore = 0;
+let gameEnd = false;
 
 function playRound(playerSelection, computerSelection) {
-  let playerChoice =
-    playerSelection.charAt(0).toUpperCase() +
-    playerSelection.slice(1).toLowerCase();
-  let computerChoice = computerSelection;
+  let resultContainer = document.createElement("p");
+  let gameFinish = false;
   switch (true) {
-    case (playerChoice === "Rock" && computerChoice === "Rock") ||
-      (playerChoice === "Paper" && computerChoice === "Paper") ||
-      (playerChoice === "Scissors" && computerChoice === "Scissors"):
+    case (playerSelection === "Rock" && computerSelection === "Rock") ||
+      (playerSelection === "Paper" && computerSelection === "Paper") ||
+      (playerSelection === "Scissors" && computerSelection === "Scissors"):
       playerWin = true;
       computerWin = true;
-      return console.log("It's a tie!");
-    case (playerChoice === "Rock" && computerChoice === "Scissors") ||
-      (playerChoice === "Paper" && computerChoice === "Rock") ||
-      (playerChoice === "Scissors" && computerChoice === "Paper"):
+      scoreEdit();
+      if (playerScore >= 3) {
+        playerWin = false;
+        computerWin = false;
+        resultContainer.textContent = `Congratulations! You Win ${playerScore} to ${computerScore} !`;
+        gameFinish = true;
+      }
+      if (computerScore >= 3) {
+        playerWin = false;
+        computerWin = false;
+        resultContainer.textContent = `Yikes! You Lose ${computerScore} to ${playerScore} !`;
+        gameFinish = true;
+      }
+      if (gameFinish) {
+        break;
+      }
+      resultContainer.textContent = `It's a tie! - Current score: Player(${playerScore} : Computer(${computerScore}))`;
+      break;
+    case (playerSelection === "Rock" && computerSelection === "Scissors") ||
+      (playerSelection === "Paper" && computerSelection === "Rock") ||
+      (playerSelection === "Scissors" && computerSelection === "Paper"):
       playerWin = true;
       computerWin = false;
-      return console.log(
-        `You Win this round! ${playerChoice} beats ${computerChoice}`
-      );
-    case (playerChoice === "Rock" && computerChoice === "Paper") ||
-      (playerChoice === "Paper" && computerChoice === "Scissors") ||
-      (playerChoice === "Scissors" && computerChoice === "Rock"):
+      scoreEdit();
+      if (playerScore >= 3) {
+        playerWin = false;
+        computerWin = false;
+        resultContainer.textContent = `Congratulations! You Win ${playerScore} to ${computerScore} !`;
+        gameFinish = true;
+      }
+      if (computerScore >= 3) {
+        playerWin = false;
+        computerWin = false;
+        resultContainer.textContent = `Yikes! You Lose ${computerScore} to ${playerScore} !`;
+        gameFinish = true;
+      }
+      if (gameFinish) {
+        break;
+      }
+      resultContainer.textContent = `You Win this round! ${playerSelection} beats ${computerSelection} - Current score: Player(${playerScore} : Computer(${computerScore}))`;
+      break;
+    case (playerSelection === "Rock" && computerSelection === "Paper") ||
+      (playerSelection === "Paper" && computerSelection === "Scissors") ||
+      (playerSelection === "Scissors" && computerSelection === "Rock"):
       playerWin = false;
       computerWin = true;
-      return console.log(
-        `You Lose this round! ${playerChoice} loses to ${computerChoice}`
-      );
+      scoreEdit();
+      if (playerScore >= 3) {
+        playerWin = false;
+        computerWin = false;
+        resultContainer.textContent = `Congratulations! You Win ${playerScore} to ${computerScore} !`;
+        gameFinish = true;
+      }
+      if (computerScore >= 3) {
+        playerWin = false;
+        computerWin = false;
+        resultContainer.textContent = `Yikes! You Lose ${computerScore} to ${playerScore} !`;
+        gameFinish = true;
+      }
+      if (gameFinish) {
+        break;
+      }
+      resultContainer.textContent = `You Lose this round! ${playerSelection} loses to ${computerSelection} - Current score: Player(${playerScore} : Computer(${computerScore}))`;
+      break;
   }
+  document.querySelector(".results").appendChild(resultContainer);
+  if (gameFinish) {
+    gameEnd = true;
+  }
+  console.log(gameEnd);
 }
 
-function game() {
-  let playerScore = 0;
-  let computerScore = 0;
-  for (let i = 0; i < 5; i++) {
-    playRound(prompt(), getComputerChoice());
+/* let btn1 = document.createElement("button");
+  btn1.id = "rock";
+document.body.appendChild(btn1); */
+/* 
 
-    if (playerWin && !computerWin) {
-      playerScore += 1;
-    }
-    if (!playerWin && computerWin) {
-      computerScore += 1;
-    }
-    if (playerWin && computerWin) {
-      playerScore += 1;
-      computerScore += 1;
-    }
-    if (playerScore >= 3) {
-      playerWin = false;
-      computerWin = false;
-      console.log(
-        `Congratulations! You Win ${playerScore} to ${computerScore} !`
-      );
-      break;
-    }
-    if (computerScore >= 3) {
-      playerWin = false;
-      computerWin = false;
-      console.log(`Yikes! You Lose ${computerScore} to ${playerScore} !`);
-      break;
-    }
-    console.log(`Player score: ${playerScore}`);
-    console.log(`Computer score: ${computerScore}`);
+});
+
+console.log(getComputerChoice()); */
+document.addEventListener("DOMContentLoaded", function () {
+  const btnRock = document.querySelector(".rock");
+  const btnPaper = document.querySelector(".paper");
+  const btnScissors = document.querySelector(".scissors");
+  const btnReset = document.querySelector(".reset");
+  const divResults = document.querySelector(".results");
+  if (!gameEnd) {
+    btnRock.addEventListener("click", function (e) {
+      playRound(e.target.value, getComputerChoice());
+    });
+    btnPaper.addEventListener("click", function (e) {
+      playRound(e.target.value, getComputerChoice());
+    });
+    btnScissors.addEventListener("click", function (e) {
+      playRound(e.target.value, getComputerChoice());
+    });
+  } else if (gameEnd) {
+    btnRock.removeEventListener("click", function (e) {
+      playRound(e.target.value, getComputerChoice());
+    });
+    btnPaper.removeEventListener("click", function (e) {
+      playRound(e.target.value, getComputerChoice());
+    });
+    btnScissors.removeEventListener("click", function (e) {
+      playRound(e.target.value, getComputerChoice());
+    });
   }
-}
-
-game();
+  btnReset.addEventListener("click", function () {
+    playerScore = 0;
+    computerScore = 0;
+    divResults.innerHTML = "";
+    divResults.textContent = "Results:";
+    gameEnd = false;
+    /* while (divResults.firstChild) {
+        divResults.removeChild(divResults.lastChild);
+      } */
+  });
+});
